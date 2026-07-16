@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRONOS // Tech & Desk Essentials</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Header / Navigation -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-accent">//</span> KRONOS
+      </div>
+
+      <div class="search-bar-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="Search catalog..." autocomplete="off">
+      </div>
+
+      <div class="header-actions">
+        <button id="track-order-btn" class="btn btn-secondary">
+          <i class="fa-solid fa-truck-fast"></i> Track Order
+        </button>
+        <button id="cart-toggle-btn" class="btn btn-primary cart-badge-btn">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-label">Cart</span>
+          <span id="cart-count-badge" class="badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="container">
+    <!-- Controls (Filter / Sorting) -->
+    <section class="controls-section">
+      <div class="filters">
+        <button class="filter-chip active" data-category="all">All Items</button>
+        <button class="filter-chip" data-category="Office">Office</button>
+        <button class="filter-chip" data-category="Electronics">Electronics</button>
+        <button class="filter-chip" data-category="Style">Style</button>
+      </div>
+
+      <div class="sorting-container">
+        <label for="sort-select" class="mono-label">SORT_BY:</label>
+        <select id="sort-select" class="sort-dropdown">
+          <option value="default">Default</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="products-section">
+      <div id="products-grid" class="products-grid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Sliding Sidebar Cart Interface -->
+  <div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-sidebar-header">
+      <h3><span class="logo-accent">//</span> SHOPPING_CART</h3>
+      <button id="cart-close-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Cart items state container -->
+    <div class="cart-content-wrapper">
+      <div id="cart-items-container" class="cart-items-container">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Checkout / Info State Machine Panel -->
+      <div id="checkout-state-panel" class="checkout-state-panel">
+        <div class="cart-totals">
+          <div class="total-row">
+            <span>SUBTOTAL:</span>
+            <span id="cart-subtotal">$0.00</span>
+          </div>
+          <div class="total-row tax-shipping">
+            <span>SHIPPING:</span>
+            <span class="accent-text">FREE</span>
+          </div>
+          <hr class="divider">
+          <div class="total-row grand-total">
+            <span>TOTAL:</span>
+            <span id="cart-total">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Buttons to drive state machine transitions -->
+        <div class="cart-actions-container">
+          <button id="proceed-to-checkout-btn" class="btn btn-primary btn-block">
+            PROCEED_TO_CHECKOUT <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Checkout Form Panel (Hidden by default) -->
+        <form id="checkout-form" class="checkout-form hidden">
+          <h4 class="form-title">// SHIPPING_INFO</h4>
+          <div class="form-group">
+            <label for="customer-name" class="mono-label">FULL_NAME</label>
+            <input type="text" id="customer-name" required placeholder="e.g. John Doe">
+          </div>
+          <div class="form-group">
+            <label for="customer-email" class="mono-label">EMAIL_ADDRESS</label>
+            <input type="email" id="customer-email" required placeholder="e.g. john@example.com">
+          </div>
+          <div class="form-group">
+            <label for="customer-phone" class="mono-label">PHONE_NUMBER</label>
+            <input type="tel" id="customer-phone" required placeholder="e.g. +1 555-0199">
+          </div>
+          <div class="form-group">
+            <label for="customer-address" class="mono-label">SHIPPING_ADDRESS</label>
+            <textarea id="customer-address" required placeholder="e.g. 123 Neon St, Cyber City"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" id="cancel-checkout-btn" class="btn btn-secondary">
+              CANCEL
+            </button>
+            <button type="submit" id="submit-order-btn" class="btn btn-primary">
+              PLACE_ORDER <i class="fa-solid fa-circle-check"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Track Order Modal -->
+  <div id="track-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><span class="logo-accent">//</span> ORDER_TRACKING</h3>
+        <button id="close-track-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-subtitle">Enter your Order ID to track shipment status. For security, an OTP verification is required.</p>
+        
+        <!-- Step 1: Input Order ID -->
+        <div id="track-step-1" class="track-input-group">
+          <input type="number" id="track-order-id" placeholder="e.g. 1" min="1">
+          <button id="request-otp-btn" class="btn btn-primary">REQUEST OTP</button>
+        </div>
+
+        <!-- Step 2: Input OTP (Hidden by default) -->
+        <div id="track-step-2" class="track-input-group hidden" style="flex-direction: column; gap: 12px; align-items: stretch;">
+          <p id="otp-destination-msg" style="font-size: 13px; color: var(--text-muted); line-height: 1.5;"></p>
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="track-otp-code" placeholder="6-digit OTP" maxlength="6" style="font-family: var(--font-mono); letter-spacing: 0.15em; text-align: center;">
+            <button id="verify-otp-btn" class="btn btn-primary">VERIFY & TRACK</button>
+          </div>
+          <button type="button" id="back-to-step1-btn" class="btn btn-secondary" style="font-size: 10px; padding: 6px 12px; align-self: flex-start;">BACK</button>
+        </div>
+
+        <div id="order-details-result" class="order-details-result hidden">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background overlay when cart is open -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="index.js"></script>
+</body>
+</html>
